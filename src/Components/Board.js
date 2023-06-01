@@ -1,6 +1,7 @@
 import {Square} from "./Square";
 import {useEffect, useState} from "react";
-const bombs = new Set(Array.from({length: 10}, () => Math.floor(Math.random() * 100)));
+import {Timer} from "./Timer";
+const bombs = new Set(Array.from({length: Math.floor(Math.random() * 10) + 5}, () => Math.floor(Math.random() * 100)));
 const mine = Array(100).fill(0)
 
 for (let i = 0; i < 10; i++) {
@@ -26,7 +27,7 @@ function countNearbyBombs(index) {
 function getNeighbors(i) {
     let neighbors = [];
 
-    if (i - 10 > 0) {
+    if (i - 10 >= 0) {
         const up = i - 10;
         neighbors.push(up);
     }
@@ -88,10 +89,13 @@ function getAllLinkedZeros(i, copiedMine, linkedZeros) {
 
 let wasBombedClicked = false;
 
-export function Board({squares, onPlay}) {
+export function Board() {
     const [moves, setMoves] = useState(0);
+    const [squares, setSquares] = useState([])
     let isVictory = mine.length - howManyClicked() === bombs.size;
-    if (isVictory) {
+    let isGameRunning = moves > 0;
+    if (isVictory || wasBombedClicked) {
+        isGameRunning = false;
         showAllBombs();
     }
 
@@ -132,8 +136,7 @@ export function Board({squares, onPlay}) {
             squares[i] = 'B';
         }
 
-        const nextSquares = squares.slice();
-        onPlay(nextSquares);
+        setSquares(squares.slice());
     }
 
     function showAllBombs() {
@@ -163,7 +166,6 @@ export function Board({squares, onPlay}) {
 
         if (bombs.has(i)) {
             wasBombedClicked = true;
-            showAllBombs();
         }
         else if (mine[i] === 0) {
             const linkedZeros = new Set(getAllLinkedZeros(i, mine.slice()));
@@ -176,10 +178,7 @@ export function Board({squares, onPlay}) {
             squares[i] = mine[i];
         }
 
-
-
-        const nextSquares = squares.slice();
-        onPlay(nextSquares);
+        setSquares(squares.slice());
     }
 
 
@@ -219,7 +218,8 @@ export function Board({squares, onPlay}) {
 
     return (
         <>
-            <div className="status">{getStatus()}</div>
+            <Timer isGameRunning={isGameRunning}/>
+            <div className={isVictory ? "status-won" : wasBombedClicked ? "status-lost" : "status"}>{getStatus()}</div>
             {board}
         </>
     );

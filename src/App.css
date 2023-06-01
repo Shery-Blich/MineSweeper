@@ -34,7 +34,7 @@
 .highlight {
   background-color: #dc2c26;
   color: black;
-  border: 2px solid #239dcb;
+  border: 2px solid white;
   font-weight: bold;
 }
 
@@ -106,10 +106,19 @@ ul {
   display: table;
 }
 
-.status {
+.status, .status-won, .status-lost {
   margin-bottom: 10px;
   font-size: calc(10px + 2vmin);
   color: #61dafb;
+}
+
+.status-won {
+
+  color: #70fb61;
+}
+
+.status-lost {
+  color: #fa0000;
 }
 .game {
   display: flex;

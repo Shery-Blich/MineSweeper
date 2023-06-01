@@ -10,7 +10,6 @@ function App() {
                 <img src={logo} className="App-logo" alt="logo" />
                 MineSweeper
             </header>
-            <div>Info</div>
             <div className="App-header">
                 <Game/>
             </div>
