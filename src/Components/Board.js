@@ -4,6 +4,7 @@ import {Timer} from "./Timer";
 
 // create a class that creats the mine end exports relevent functions
 // use effect that runs only on the first render
+// + Add this logic to a backend using axios and express
 const bombs = new Set(Array.from({length: Math.floor(Math.random() * 10) + 5}, () => Math.floor(Math.random() * 100)));
 const mine = Array(100).fill(0)
 
@@ -111,12 +112,12 @@ export function Board() {
             e.preventDefault()
         }
 
-        // remove only specificly for board using find element by
-        document.addEventListener("contextmenu", handleContextMenu)
+        const board = document.querySelector(".board");
+        board.addEventListener("contextmenu", handleContextMenu)
 
         // What's purpose?
         return () => {
-            document.removeEventListener("contextmenu", handleContextMenu)
+            board.removeEventListener("contextmenu", handleContextMenu)
         }
     }, [])
 
@@ -226,10 +227,10 @@ export function Board() {
     }
 
     return (
-        <>
+        <div className="board">
             <Timer isGameRunning={isGameRunning}/>
             <div className={isVictory ? "status-won" : wasBombedClicked ? "status-lost" : "status"}>{getStatus()}</div>
             {board}
-        </>
+        </div>
     );
 }
