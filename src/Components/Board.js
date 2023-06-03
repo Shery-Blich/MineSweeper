@@ -1,6 +1,9 @@
 import {Square} from "./Square";
 import {useEffect, useState} from "react";
 import {Timer} from "./Timer";
+
+// create a class that creats the mine end exports relevent functions
+// use effect that runs only on the first render
 const bombs = new Set(Array.from({length: Math.floor(Math.random() * 10) + 5}, () => Math.floor(Math.random() * 100)));
 const mine = Array(100).fill(0)
 
@@ -89,6 +92,9 @@ function getAllLinkedZeros(i, copiedMine, linkedZeros) {
 
 let wasBombedClicked = false;
 
+// pass setState for information to the player (moves &  timer)
+// restart button in game?
+// + You should always start from zero
 export function Board() {
     const [moves, setMoves] = useState(0);
     const [squares, setSquares] = useState([])
@@ -99,13 +105,16 @@ export function Board() {
         showAllBombs();
     }
 
+    // this use effect only runs when first rendering
     useEffect(() => {
         const handleContextMenu = (e) => {
             e.preventDefault()
         }
 
+        // remove only specificly for board using find element by
         document.addEventListener("contextmenu", handleContextMenu)
 
+        // What's purpose?
         return () => {
             document.removeEventListener("contextmenu", handleContextMenu)
         }
