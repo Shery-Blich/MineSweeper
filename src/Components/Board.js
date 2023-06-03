@@ -2,7 +2,7 @@ import {Square} from "./Square";
 import {useEffect, useState} from "react";
 import {Timer} from "./Timer";
 
-// create a class that creats the mine end exports relevent functions
+// create a class that creates the mine end exports relevant functions
 // use effect that runs only on the first render
 // + Add this logic to a backend using axios and express
 const bombs = new Set(Array.from({length: Math.floor(Math.random() * 10) + 5}, () => Math.floor(Math.random() * 100)));
@@ -96,8 +96,7 @@ let wasBombedClicked = false;
 // pass setState for information to the player (moves &  timer)
 // restart button in game?
 // + You should always start from zero
-export function Board() {
-    const [moves, setMoves] = useState(0);
+export function Board({setMoves, moves}) {
     const [squares, setSquares] = useState([])
     let isVictory = mine.length - howManyClicked() === bombs.size;
     let isGameRunning = moves > 0;
@@ -116,6 +115,8 @@ export function Board() {
         board.addEventListener("contextmenu", handleContextMenu)
 
         // What's purpose?
+        // Clean up after the component unmounts, in order to prevent memory leaks
+        // also triggered when the dependent component changes(not this case, but in timer yes.)
         return () => {
             board.removeEventListener("contextmenu", handleContextMenu)
         }
@@ -172,7 +173,9 @@ export function Board() {
             return;
         }
 
-        setMoves(moves + 1);
+        console.log(setMoves)
+
+        setMoves(moves => moves + 1);
 
         if (bombs.has(i)) {
             wasBombedClicked = true;
@@ -214,6 +217,8 @@ export function Board() {
         );
     }
 
+
+    // move status to game when there is backend
     function getStatus() {
         if (isVictory) {
             return `You Won! in ${moves} moves! Impressive ;)`;
