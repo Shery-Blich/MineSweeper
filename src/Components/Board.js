@@ -1,18 +1,15 @@
 import {Square} from "./Square";
 import {useEffect, useState} from "react";
 import {Timer} from "./Timer";
-import mineFieldManager from "../mineFieldManager";
 
-// create a class that creates the mineField.mine end exports relevant functions
 // use effect that runs only on the first render
 // + Add this logic to a backend using axios and express
 
 let wasBombedClicked = false;
-const mineField = new mineFieldManager(10);
 // pass setState for information to the player (moves &  timer)
 // restart button in game?
 // + You should always start from zero
-export function Board({setMoves, moves}) {
+export function Board({setMoves, moves, mineField}) {
     const [squares, setSquares] = useState([])
     let isVictory = mineField.mine.length - howManyClicked() === mineField.bombs.size;
     let isGameRunning = moves > 0;
@@ -141,7 +138,7 @@ export function Board({setMoves, moves}) {
         }
 
         if (wasBombedClicked) {
-            return "You lost! killed everyone inside the mineField.mine! :("
+            return "You lost! killed everyone inside the mine! :("
         }
 
         return `There are ${mineField.bombs.size} Mines, you made ${moves} moves`;
