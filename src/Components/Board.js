@@ -1,104 +1,20 @@
 import {Square} from "./Square";
 import {useEffect, useState} from "react";
 import {Timer} from "./Timer";
+import mineFieldManager from "../mineFieldManager";
 
-// create a class that creates the mine end exports relevant functions
+// create a class that creates the mineField.mine end exports relevant functions
 // use effect that runs only on the first render
 // + Add this logic to a backend using axios and express
-const bombs = new Set(Array.from({length: Math.floor(Math.random() * 10) + 5}, () => Math.floor(Math.random() * 100)));
-const mine = Array(100).fill(0)
-
-for (let i = 0; i < 10; i++) {
-     for (let j = 0; j < 10; j++) {
-         const index = i * 10 + j;
-         mine[index] = countNearbyBombs(index);
-     }
- }
-
-function countNearbyBombs(index) {
-    const neighbors = getNeighbors(index);
-    let counter = 0;
-
-    neighbors.forEach((neighbor) => {
-        if (isBomb(neighbor)) {
-            counter++;
-        }
-    })
-
-    return counter;
-}
-
-function getNeighbors(i) {
-    let neighbors = [];
-
-    if (i - 10 >= 0) {
-        const up = i - 10;
-        neighbors.push(up);
-    }
-
-    if (i + 10 < mine.length) {
-        const down = i + 10;
-        neighbors.push(down);
-    }
-
-    if (i % 10 !== 0) {
-        const left = i - 1;
-        const upLeft = i - 11;
-        const downLeft = i + 9;
-
-        neighbors.push(left);
-        neighbors.push(upLeft);
-        neighbors.push(downLeft);
-    }
-
-    if (i%10 !== 9) {
-        const right = i + 1;
-        const upRight = i - 9;
-        const downRight = i + 11;
-
-        neighbors.push(right);
-        neighbors.push(upRight);
-        neighbors.push(downRight);
-    }
-
-    return neighbors;
-}
- function isBomb(i) {
-     return bombs.has(i) ? 1 : 0;
- }
-
-function getAllLinkedZeros(i, copiedMine, linkedZeros) {
-     if (i < 0 || copiedMine.length <= i) {
-         return [];
-     }
-
-     if (copiedMine[i] !== 0) {
-         if (copiedMine[i] === -1) {
-             return [];
-         }
-
-         return [i];
-     }
-
-     linkedZeros = [i];
-     copiedMine[i] = -1;
-     const neighbors = getNeighbors(i);
-
-     neighbors.forEach((neighbor) => {
-         linkedZeros.push(...getAllLinkedZeros(neighbor,copiedMine));
-    });
-
-     return linkedZeros;
-}
 
 let wasBombedClicked = false;
-
+const mineField = new mineFieldManager(10);
 // pass setState for information to the player (moves &  timer)
 // restart button in game?
 // + You should always start from zero
 export function Board({setMoves, moves}) {
     const [squares, setSquares] = useState([])
-    let isVictory = mine.length - howManyClicked() === bombs.size;
+    let isVictory = mineField.mine.length - howManyClicked() === mineField.bombs.size;
     let isGameRunning = moves > 0;
     if (isVictory || wasBombedClicked) {
         isGameRunning = false;
@@ -151,7 +67,7 @@ export function Board({setMoves, moves}) {
     }
 
     function showAllBombs() {
-        bombs.forEach((index) => {
+        mineField.bombs.forEach((index) => {
             squares[index] = -1;
         });
     }
@@ -177,18 +93,18 @@ export function Board({setMoves, moves}) {
 
         setMoves(moves => moves + 1);
 
-        if (bombs.has(i)) {
+        if (mineField.bombs.has(i)) {
             wasBombedClicked = true;
         }
-        else if (mine[i] === 0) {
-            const linkedZeros = new Set(getAllLinkedZeros(i, mine.slice()));
+        else if (mineField.mine[i] === 0) {
+            const linkedZeros = mineField.getAllLinkedSquares(i);
 
             linkedZeros.forEach((index) => {
-                squares[index] = mine[index];
+                squares[index] = mineField.mine[index];
             });
         }
         else {
-            squares[i] = mine[i];
+            squares[i] = mineField.mine[i];
         }
 
         setSquares(squares.slice());
@@ -225,10 +141,10 @@ export function Board({setMoves, moves}) {
         }
 
         if (wasBombedClicked) {
-            return "You lost! killed everyone inside the mine! :("
+            return "You lost! killed everyone inside the mineField.mine! :("
         }
 
-        return `There are ${bombs.size} Mines, you made ${moves} moves`;
+        return `There are ${mineField.bombs.size} Mines, you made ${moves} moves`;
     }
 
     return (
