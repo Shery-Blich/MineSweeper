@@ -7,7 +7,6 @@ export function Square({ value, onSquareClick, highlight, onRightClick }) {
         return  isBomb() ? "highlight" : "button";
     }
 
-
     function shouldMarkAsClicked() {
         return (value!= null && value !== 'B');
     }

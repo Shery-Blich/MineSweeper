@@ -10,6 +10,7 @@ const corsOptions = {
 }
 
 let mineField = null;
+
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());

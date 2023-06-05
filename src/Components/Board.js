@@ -10,6 +10,7 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
     const [squares, setSquares] = useState([])
     let isVictory = mineField.mine.length - howManyClicked() === mineField.bombs.length;
     let isGameRunning = moves > 0;
+
     if (isVictory || wasBombedClicked) {
         isGameRunning = false;
         showAllBombs();
@@ -64,8 +65,7 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
 
         if (squares[i] === 'B') {
             squares[i] = null
-        }
-        else {
+        } else {
             squares[i] = 'B';
         }
 
@@ -102,8 +102,7 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         }
         else if (mineField.mine[i] === 0) {
             getAllLinkedSquares(i);
-        }
-        else {
+        } else {
             squares[i] = mineField.mine[i];
         }
 
@@ -112,8 +111,10 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
 
 
     const board = [];
+
     for (let i = 0; i < 10; i++) {
         const squaresInRow = [];
+
         for (let j = 0; j < 10; j++) {
             const squareIndex = i * 10 + j;
             squaresInRow.push(
@@ -126,13 +127,13 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
                 />
             );
         }
+
         board.push(
             <div key={i} className="board-row">
                 {squaresInRow}
             </div>
         );
     }
-
 
     // move status to game when there is backend
     function getStatus() {

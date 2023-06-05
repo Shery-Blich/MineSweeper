@@ -5,7 +5,6 @@ export function Timer({isGameRunning}) {
 
     useEffect(() => {
         if (isGameRunning) {
-            // CHANGE COUNTER TO USE LAMBDA
             // set interval instead of set timeout
             setTimeout(() => setCounter(counter => counter + 1),1000);
         }

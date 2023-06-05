@@ -37,8 +37,6 @@ function App() {
         })
     }
 
-
-
         return (
         <div className="App">
             <header className="header">
@@ -51,6 +49,5 @@ function App() {
         </div>
     );
 }
-
 
 export default App;

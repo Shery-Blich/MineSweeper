@@ -28,6 +28,7 @@ class mineFieldManager {
         return counter;
     }
 
+    // fix code to fit different sizes
     getNeighbors(i) {
         let neighbors = [];
 
