@@ -2,21 +2,30 @@ import {Square} from "./Square";
 import {useEffect, useState} from "react";
 import {Timer} from "./Timer";
 
-// use effect that runs only on the first render
-// + Add this logic to a backend using axios and express
-
 let wasBombedClicked = false;
-// pass setState for information to the player (moves &  timer)
+// pass setState for information to the player timer
 // restart button in game?
 // + You should always start from zero
-export function Board({setMoves, moves, mineField}) {
+export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSquares}) {
     const [squares, setSquares] = useState([])
-    let isVictory = mineField.mine.length - howManyClicked() === mineField.bombs.size;
+    let isVictory = mineField.mine.length - howManyClicked() === mineField.bombs.length;
     let isGameRunning = moves > 0;
     if (isVictory || wasBombedClicked) {
         isGameRunning = false;
         showAllBombs();
     }
+
+    // this runs on every change to linked squares
+    useEffect(() => {
+        if (linkedSquares.length > 0) {
+            linkedSquares.forEach((index) => {
+                const squareValue = mineField.mine[index];
+                squares[index] = squareValue === 0 ? ' ' : squareValue;
+            });
+
+            setSquares(prevSquares => [...prevSquares]);
+        }
+    }, [linkedSquares]);
 
     // this use effect only runs when first rendering
     useEffect(() => {
@@ -86,25 +95,19 @@ export function Board({setMoves, moves, mineField}) {
             return;
         }
 
-        console.log(setMoves)
-
         setMoves(moves => moves + 1);
 
-        if (mineField.bombs.has(i)) {
+        if (mineField.bombs.includes(i)) {
             wasBombedClicked = true;
         }
         else if (mineField.mine[i] === 0) {
-            const linkedZeros = mineField.getAllLinkedSquares(i);
-
-            linkedZeros.forEach((index) => {
-                squares[index] = mineField.mine[index];
-            });
+            getAllLinkedSquares(i);
         }
         else {
             squares[i] = mineField.mine[i];
         }
 
-        setSquares(squares.slice());
+        setSquares(prevSquares => [...prevSquares]);
     }
 
 
@@ -141,7 +144,7 @@ export function Board({setMoves, moves, mineField}) {
             return "You lost! killed everyone inside the mine! :("
         }
 
-        return `There are ${mineField.bombs.size} Mines, you made ${moves} moves`;
+        return `There are ${mineField.bombs.length} Mines, you made ${moves} moves`;
     }
 
     return (

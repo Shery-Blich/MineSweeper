@@ -31,34 +31,51 @@ class mineFieldManager {
     getNeighbors(i) {
         let neighbors = [];
 
-        if (i - this.size >= 0) {
+        const isThereUp = i - this.size >= 0;
+        const isThereDown = i + this.size < this.mine.length;
+        const isThereLeft = i % this.size !== 0;
+        const isThereRight = i % this.size !== 9;
+
+        if (isThereUp) {
             const up = i - this.size;
             neighbors.push(up);
         }
 
-        if (i + this.size < this.mine.length) {
+        if (isThereDown) {
             const down = i + this.size;
             neighbors.push(down);
         }
 
-        if (i % this.size !== 0) {
+        if (isThereLeft) {
             const left = i - 1;
             const upLeft = i - 11;
             const downLeft = i + 9;
 
             neighbors.push(left);
-            neighbors.push(upLeft);
-            neighbors.push(downLeft);
+
+            if (isThereUp) {
+                neighbors.push(upLeft);
+            }
+
+            if (isThereDown) {
+                neighbors.push(downLeft);
+            }
         }
 
-        if (i % this.size !== 9) {
+        if (isThereRight) {
             const right = i + 1;
             const upRight = i - 9;
             const downRight = i + 11;
 
             neighbors.push(right);
-            neighbors.push(upRight);
-            neighbors.push(downRight);
+
+            if (isThereUp) {
+                neighbors.push(upRight);
+            }
+
+            if (isThereDown) {
+                neighbors.push(downRight);
+            }
         }
 
         return neighbors;
@@ -100,4 +117,4 @@ class mineFieldManager {
     }
 }
 
-export default mineFieldManager;
+module.exports = mineFieldManager;

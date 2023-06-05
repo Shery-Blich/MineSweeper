@@ -1,15 +1,15 @@
 import {Board} from "./Board";
 import {useState} from "react";
-import mineFieldManager from "../mineFieldManager";
 
-export default function Game() {
+export default function Game({mineField, getAllLinkedSquares, linkedSquares}) {
     const [moves, setMoves] = useState(0);
-    const [mineField, setMineField] = useState(new mineFieldManager(10));
 
     return (
         <div className="game">
             <div className="game-board">
-                <Board setMoves={setMoves} moves={moves} mineField={mineField}/>
+                <Board setMoves={setMoves} moves={moves} mineField={{mine: mineField.mine, bombs: mineField.bombs}} getAllLinkedSquares={getAllLinkedSquares}
+                       linkedSquares = {linkedSquares}
+                />
             </div>
         </div>
     );
