@@ -1,18 +1,15 @@
 import {Square} from "./Square";
 import {useEffect, useState} from "react";
-import {Timer} from "./Timer";
 
 let wasBombedClicked = false;
-// pass setState for information to the player timer
 // restart button in game?
 // + You should always start from zero
-export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSquares}) {
+export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSquares, setIsCurrGameRunning}) {
     const [squares, setSquares] = useState([])
     let isVictory = mineField.mine.length - howManyClicked() === mineField.bombs.length;
-    let isGameRunning = moves > 0;
 
     if (isVictory || wasBombedClicked) {
-        isGameRunning = false;
+        setIsCurrGameRunning(false);
         showAllBombs();
     }
 
@@ -28,7 +25,6 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         }
     }, [linkedSquares]);
 
-    // this use effect only runs when first rendering
     useEffect(() => {
         const handleContextMenu = (e) => {
             e.preventDefault()
@@ -96,6 +92,9 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         }
 
         setMoves(moves => moves + 1);
+        if (moves === 1) {
+            setIsCurrGameRunning(true);
+        }
 
         if (mineField.bombs.includes(i)) {
             wasBombedClicked = true;
@@ -112,11 +111,11 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
 
     const board = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < mineField.size; i++) {
         const squaresInRow = [];
 
-        for (let j = 0; j < 10; j++) {
-            const squareIndex = i * 10 + j;
+        for (let j = 0; j < mineField.size; j++) {
+            const squareIndex = i * mineField.size + j;
             squaresInRow.push(
                 <Square
                     key={squareIndex}
@@ -135,7 +134,6 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         );
     }
 
-    // move status to game when there is backend
     function getStatus() {
         if (isVictory) {
             return `You Won! in ${moves} moves! Impressive ;)`;
@@ -150,7 +148,6 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
 
     return (
         <div className="board">
-            <Timer isGameRunning={isGameRunning}/>
             <div className={isVictory ? "status-won" : wasBombedClicked ? "status-lost" : "status"}>{getStatus()}</div>
             {board}
         </div>

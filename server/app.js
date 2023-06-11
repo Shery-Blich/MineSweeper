@@ -21,20 +21,20 @@ app.post('/minefield', (req, res) => {
     const {size} = req.body;
     const mineField = new mineFieldManager(size);
 
-    res.send({mine: mineField.mine, bombs: Array.from(mineField.bombs)}).status(200).end()
+    res.send({mine: mineField.mine, bombs: Array.from(mineField.bombs), size: mineField.size}).status(200).end()
 });
 
-app.post('/linkedSquares/:i', (req, res) => {
-    let { i } = req.params;
+app.post('/linkedSquares/:index', (req, res) => {
+    let { index } = req.params;
     const { mineField } = req.body;
     const mineFiledSize = Math.sqrt(mineField.mine.length);
 
-    if (i != parseInt(i)) {
-        res.status(400).json({ message: 'Bad request, i is not an integer' }).end();
+    if (index != parseInt(index)) {
+        res.status(400).json({ message: `Bad request, index: ${index} is not an integer` }).end();
         return;
     }
 
-    i = parseInt(i);
+    index = parseInt(index);
 
     if (!mineField) {
         res.status(404).json({ message: 'Bad request, no mineField object provided' }).end();
@@ -42,7 +42,7 @@ app.post('/linkedSquares/:i', (req, res) => {
     }
 
     const mineFieldInstance = new mineFieldManager(mineFiledSize, mineField.mine, new Set(mineField.bombs));
-    const allLinkedZeros = Array.from(mineFieldInstance.getAllLinkedSquares(i));
+    const allLinkedZeros = Array.from(mineFieldInstance.getAllLinkedSquares(index));
 
     res.send({allLinked :allLinkedZeros, mineField:
             {size: mineFieldInstance.size, mine: mineFieldInstance.mine, bombs: Array.from(mineFieldInstance.bombs)}})

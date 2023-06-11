@@ -1,18 +1,16 @@
 class mineFieldManager {
-    constructor(size = 10, mine = undefined, bombs = undefined) {
+    constructor(size = 5, mine = undefined, bombs = undefined) {
         if (mine && bombs) {
             this.size = Math.sqrt(mine.length);
             this.bombs = new Set(bombs);
             this.mine = mine;
+        } else if (!mine && !bombs) {
+            this.size = size;
+            this.bombs = new Set(Array.from({length: Math.floor(Math.random() * size) + size}, () => Math.floor(Math.random() * size * size)));
+            this.mine = Array(this.size * this.size).fill(0);
+            this.generateMineField();
         } else {
-            if (!mine && !bombs) {
-                this.size = size;
-                this.bombs = new Set(Array.from({ length: Math.floor(Math.random() * size) + size }, () => Math.floor(Math.random() * size * size)));
-                this.mine = Array(this.size * this.size).fill(0);
-                this.generateMineField();
-            } else {
-                throw new Error(`Invalid mine and bombs parameters, mine: ${mine}, bombs: ${bombs}`);
-            }
+            throw new Error(`Invalid mine and bombs parameters, mine: ${mine}, bombs: ${bombs}`);
         }
     }
 
@@ -27,25 +25,18 @@ class mineFieldManager {
 
     countNearbyBombs(index) {
         const neighbors = this.getNeighbors(index);
-        let counter = 0;
-
-        neighbors.forEach((neighbor) => {
-            if (this.isBomb(neighbor)) {
-                counter++;
-            }
-        })
-
-        return counter;
+        return neighbors.filter((neighbor) => this.isBomb(neighbor)).length;
     }
 
     // fix code to fit different sizes
     getNeighbors(i) {
         let neighbors = [];
+        const maxValRow = this.size - 1;
 
         const isThereUp = i - this.size >= 0;
         const isThereDown = i + this.size < this.mine.length;
         const isThereLeft = i % this.size !== 0;
-        const isThereRight = i % this.size !== 9;
+        const isThereRight = i % this.size !== maxValRow;
 
         if (isThereUp) {
             const up = i - this.size;
@@ -59,8 +50,8 @@ class mineFieldManager {
 
         if (isThereLeft) {
             const left = i - 1;
-            const upLeft = i - 11;
-            const downLeft = i + 9;
+            const upLeft = i - this.size - 1;
+            const downLeft = i + this.size - 1;
 
             neighbors.push(left);
 
@@ -75,8 +66,8 @@ class mineFieldManager {
 
         if (isThereRight) {
             const right = i + 1;
-            const upRight = i - 9;
-            const downRight = i + 11;
+            const upRight = i - this.size + 1
+            const downRight = i + this.size + 1;
 
             neighbors.push(right);
 

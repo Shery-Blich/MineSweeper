@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 const baseURL = "http://localhost:3080";
 
 function App() {
-    const [mineField, setMineField] = useState({mine: [], bombs: []});
+    const [mineField, setMineField] = useState({mine: [], bombs: [], size: 10});
     const [allLinkedSquares, setAllLinkedSquares] = useState([]);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ function App() {
     const createGame = (size = 10) => {
         client.post(`/minefield`, { size: size })
             .then((response) => {
-                setMineField({mine: response.data.mine, bombs: response.data.bombs});
+                setMineField({mine: response.data.mine, bombs: response.data.bombs, size: response.data.size});
             })
             .catch((error) => {
                 console.log(error);
