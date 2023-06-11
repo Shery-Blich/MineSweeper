@@ -9,8 +9,6 @@ const corsOptions = {
     credentials: true
 }
 
-let mineField = null;
-
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
@@ -21,29 +19,34 @@ app.get('/', (req, res) => {
 
 app.post('/minefield', (req, res) => {
     const {size} = req.body;
-    mineField = new mineFieldManager(size);
+    const mineField = new mineFieldManager(size);
 
     res.send({mine: mineField.mine, bombs: Array.from(mineField.bombs)}).status(200).end()
 });
 
-app.get('/linkedSquares/:i', (req, res) => {
-    let {i} = req.params;
+app.post('/linkedSquares/:i', (req, res) => {
+    let { i } = req.params;
+    const { mineField } = req.body;
+    const mineFiledSize = Math.sqrt(mineField.mine.length);
 
     if (i != parseInt(i)) {
-        res.status(400).json({message: 'Bad request, i is not an integer'}).end();
+        res.status(400).json({ message: 'Bad request, i is not an integer' }).end();
         return;
     }
 
     i = parseInt(i);
 
     if (!mineField) {
-        res.status(404).json({message: 'Bad request, no mine was created'}).end();
+        res.status(404).json({ message: 'Bad request, no mineField object provided' }).end();
         return;
     }
 
-    const allLinkedZeros = Array.from(mineField.getAllLinkedSquares(i));
+    const mineFieldInstance = new mineFieldManager(mineFiledSize, mineField.mine, new Set(mineField.bombs));
+    const allLinkedZeros = Array.from(mineFieldInstance.getAllLinkedSquares(i));
 
-    res.send({allLinkedZeros}).status(200).end();
+    res.send({allLinked :allLinkedZeros, mineField:
+            {size: mineFieldInstance.size, mine: mineFieldInstance.mine, bombs: Array.from(mineFieldInstance.bombs)}})
+        .status(200).end();
 });
 
 app.listen(port, () => {

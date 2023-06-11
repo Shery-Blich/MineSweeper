@@ -1,9 +1,19 @@
 class mineFieldManager {
-    constructor(size = 10) {
-        this.size = size;
-        this.bombs = new Set(Array.from({length: Math.floor(Math.random() * size) + size}, () => Math.floor(Math.random() * size * size)));
-        this.mine = Array(this.size * this.size).fill(0);
-        this.generateMineField();
+    constructor(size = 10, mine = undefined, bombs = undefined) {
+        if (mine && bombs) {
+            this.size = Math.sqrt(mine.length);
+            this.bombs = new Set(bombs);
+            this.mine = mine;
+        } else {
+            if (!mine && !bombs) {
+                this.size = size;
+                this.bombs = new Set(Array.from({ length: Math.floor(Math.random() * size) + size }, () => Math.floor(Math.random() * size * size)));
+                this.mine = Array(this.size * this.size).fill(0);
+                this.generateMineField();
+            } else {
+                throw new Error(`Invalid mine and bombs parameters, mine: ${mine}, bombs: ${bombs}`);
+            }
+        }
     }
 
     generateMineField() {

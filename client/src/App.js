@@ -30,12 +30,19 @@ function App() {
     }
 
     const getAllLinkedSquares = (i) => {
-        client.get(`/linkedSquares/${i}`).then((response) => {
-            setAllLinkedSquares(response.data.allLinkedZeros);
-        }).catch((error) => {
-            console.log(error);
+        client.post(`/linkedSquares/${i}`, {
+            mineField: {
+                mine: mineField.mine,
+                bombs: mineField.bombs
+            }
         })
-    }
+            .then((response) => {
+                setAllLinkedSquares(response.data.allLinked);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
         return (
         <div className="App">
