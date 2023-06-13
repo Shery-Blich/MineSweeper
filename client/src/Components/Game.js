@@ -12,14 +12,14 @@ export default function Game({mineField, getAllLinkedSquares, linkedSquares, cre
     const [bombCount, setBombCount] = useState(10);
 
     const handleCreateGame = () => {
-        if (!size || size < 2 || size > 15) {
-            alert("For the Mine Size, Please enter a number between 2 and 12");
+        if (!size || size < 5 || size > 12) {
+            alert("For the Mine Size, Please enter a number between 5 and 12");
 
             return;
         }
 
-        if (bombCount >= size * 2 || bombCount < 1 ) {
-            alert(`For the Bombs, Please enter a number between 1 and ${size * size}`);
+        if (bombCount >= size * 2 || bombCount < size / 2 ) {
+            alert(`For the Bombs, Please enter a number between ${Math.floor(size/2)} and ${size * 2}`);
 
             return;
         }
