@@ -51,7 +51,7 @@ function App() {
                 MineSweeper
             </header>
             <div className="App-header">
-                <Game mineField={mineField} getAllLinkedSquares={getAllLinkedSquares} linkedSquares = {allLinkedSquares} />
+                <Game mineField={mineField} getAllLinkedSquares={getAllLinkedSquares} linkedSquares = {allLinkedSquares} createGame = {createGame}/>
             </div>
         </div>
     );

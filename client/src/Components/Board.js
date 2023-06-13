@@ -2,14 +2,13 @@ import {Square} from "./Square";
 import {useEffect, useState} from "react";
 
 let wasBombedClicked = false;
+let isVictory = false;
 // restart button in game?
 // + You should always start from zero
-export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSquares, setIsCurrGameRunning}) {
+export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSquares, setIsGameOver, isGameOver}) {
     const [squares, setSquares] = useState([])
-    let isVictory = mineField.mine.length - howManyClicked() === mineField.bombs.length;
 
-    if (isVictory || wasBombedClicked) {
-        setIsCurrGameRunning(false);
+    if (isGameOver) {
         showAllBombs();
     }
 
@@ -25,6 +24,14 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         }
     }, [linkedSquares]);
 
+
+    // Triggers on every change to mine(meaning game was restarted)
+    useEffect(() => {
+        wasBombedClicked = false;
+        isVictory = false;
+        setSquares([]);
+    }, [mineField.mine]);
+
     useEffect(() => {
         const handleContextMenu = (e) => {
             e.preventDefault()
@@ -35,14 +42,13 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
 
         // What's purpose?
         // Clean up after the component unmounts, in order to prevent memory leaks
-        // also triggered when the dependent component changes(not this case, but in timer yes.)
         return () => {
             board.removeEventListener("contextmenu", handleContextMenu)
         }
     }, [])
 
     function isSquareNotClickable(i) {
-        if (wasBombedClicked || isVictory) {
+        if (isGameOver) {
             return true;
         }
 
@@ -92,12 +98,10 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         }
 
         setMoves(moves => moves + 1);
-        if (moves === 1) {
-            setIsCurrGameRunning(true);
-        }
 
         if (mineField.bombs.includes(i)) {
             wasBombedClicked = true;
+            setIsGameOver(prev => !prev);
         }
         else if (mineField.mine[i] === 0) {
             getAllLinkedSquares(i);
@@ -106,6 +110,11 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         }
 
         setSquares(prevSquares => [...prevSquares]);
+
+        if (mineField.mine.length - howManyClicked() === mineField.bombs.length) {
+            isVictory = true;
+            setIsGameOver(prev => !prev);
+        }
     }
 
 
@@ -121,7 +130,7 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
                     key={squareIndex}
                     value={squares[squareIndex]}
                     onSquareClick={() => handleClick(squareIndex)}
-                    highlight={wasBombedClicked || isVictory}
+                    highlight={isGameOver}
                     onRightClick={() => handleRightClick(squareIndex)}
                 />
             );
