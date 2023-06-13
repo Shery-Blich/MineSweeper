@@ -123,6 +123,7 @@ ul {
 .game {
   display: flex;
   flex-direction: column;
+  margin: 3vh;
 }
 
 .game-info {

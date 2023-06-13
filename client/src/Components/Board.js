@@ -3,8 +3,7 @@ import {useEffect, useState} from "react";
 
 let wasBombedClicked = false;
 let isVictory = false;
-// restart button in game?
-// + You should always start from zero
+
 export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSquares, setIsGameOver, isGameOver}) {
     const [squares, setSquares] = useState([])
 

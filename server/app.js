@@ -18,8 +18,9 @@ app.get('/', (req, res) => {
 })
 
 app.post('/minefield', (req, res) => {
-    const {size} = req.body;
-    const mineField = new mineFieldManager(size);
+    const size = req.body.size;
+    const bombsCount = req.body.bombsCount;
+    const mineField = new mineFieldManager(size, bombsCount);
 
     res.send({mine: mineField.mine, bombs: Array.from(mineField.bombs), size: mineField.size}).status(200).end()
 });
@@ -41,7 +42,7 @@ app.post('/linkedSquares/:index', (req, res) => {
         return;
     }
 
-    const mineFieldInstance = new mineFieldManager(mineFiledSize, mineField.mine, new Set(mineField.bombs));
+    const mineFieldInstance = new mineFieldManager(mineFiledSize, mineField.bombs.length, mineField.mine, new Set(mineField.bombs));
     const allLinkedZeros = Array.from(mineFieldInstance.getAllLinkedSquares(index));
 
     res.send({allLinked :allLinkedZeros, mineField:

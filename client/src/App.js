@@ -19,8 +19,8 @@ function App() {
         withCredentials: true,
     });
 
-    const createGame = (size = 10) => {
-        client.post(`/minefield`, { size: size })
+    const createGame = (size = 10, bombsCount = 10) => {
+        client.post(`/minefield`, { size: size, bombsCount: bombsCount })
             .then((response) => {
                 setMineField({mine: response.data.mine, bombs: response.data.bombs, size: response.data.size});
             })
