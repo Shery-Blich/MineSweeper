@@ -28,7 +28,6 @@ class mineFieldManager {
         return neighbors.filter((neighbor) => this.isBomb(neighbor)).length;
     }
 
-    // fix code to fit different sizes
     getNeighbors(i) {
         let neighbors = [];
         const maxValRow = this.size - 1;
