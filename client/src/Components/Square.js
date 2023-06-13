@@ -1,10 +1,10 @@
-export function Square({ value, onSquareClick, highlight, onRightClick }) {
+export function Square({ value, onSquareClick, isGameOver, onRightClick }) {
     function getClassName() {
         if (!shouldMarkAsClicked()) {
             return value === 'B' ? "flag" : "square";
         }
 
-        return  isBomb() ? "highlight" : "button";
+        return isBomb() ? "highlight" : "button";
     }
 
     function shouldMarkAsClicked() {
@@ -12,11 +12,11 @@ export function Square({ value, onSquareClick, highlight, onRightClick }) {
     }
 
     function isBomb() {
-        return highlight && value === -1;
+        return isGameOver && value === -1;
     }
 
     return (
-        <button className={getClassName()} onClick={onSquareClick} onContextMenu={onRightClick}>
+        <button disabled={isGameOver || shouldMarkAsClicked()} className={getClassName()} onClick={onSquareClick} onContextMenu={onRightClick}>
             {value}
         </button>
     );

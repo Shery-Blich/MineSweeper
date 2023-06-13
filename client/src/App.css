@@ -25,16 +25,15 @@
   color: white;
 }
 .button , .p {
-  background-color: #23cb2b;
+  background-color: #1f599a;
+  border: 2px solid rgba(255, 255, 255, 0.25);
   color: white;
-  border: 2px solid white;
-  font-weight: bold;
 }
 
 .highlight {
   background-color: #dc2c26;
   color: black;
-  border: 2px solid white;
+  border: 2px solid rgba(255, 255, 255, 0.25);
   font-weight: bold;
 }
 
@@ -60,9 +59,10 @@
 }
 
 .square {
-  background-color: #020b15;
-  border: 2px solid #239dcb;
+  background-color: #000000;
   color: white;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  font-weight: bold;
 }
 
 h1 {

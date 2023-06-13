@@ -39,7 +39,6 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
         const board = document.querySelector(".board");
         board.addEventListener("contextmenu", handleContextMenu)
 
-        // What's purpose?
         // Clean up after the component unmounts, in order to prevent memory leaks
         return () => {
             board.removeEventListener("contextmenu", handleContextMenu)
@@ -59,6 +58,7 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
     }
 
 
+    // Right click is not possible to disable after being overridden :(. So we have to do it manually.
     function handleRightClick(i) {
         if(isSquareNotClickable(i)) {
             return;
@@ -92,10 +92,6 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
     }
 
     function handleClick(i) {
-        if(isSquareNotClickable(i)) {
-            return;
-        }
-
         setMoves(moves => moves + 1);
 
         if (mineField.bombs.includes(i)) {
@@ -129,7 +125,7 @@ export function Board({setMoves, moves, mineField, getAllLinkedSquares, linkedSq
                     key={squareIndex}
                     value={squares[squareIndex]}
                     onSquareClick={() => handleClick(squareIndex)}
-                    highlight={isGameOver}
+                    isGameOver={isGameOver}
                     onRightClick={() => handleRightClick(squareIndex)}
                 />
             );

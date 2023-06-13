@@ -43,7 +43,7 @@ export default function Game({mineField, getAllLinkedSquares, linkedSquares, cre
                 <TextField style={{background:"pink"}}  onChange={(e) => setSize(parseInt(e.target.value))}
                            label={'Mine Size'} placeholder={mineField.size.toString()} margin={"normal"} />
                 <TextField style={{background:"tomato"}} onChange={(e) => setBombCount(parseInt(e.target.value))}
-                           label={'Bombs'} margin={"normal"} placeholder={mineField.bombs.length.toString()} />
+                           label={'Bombs'} placeholder={mineField.bombs.length.toString()} margin={"normal"} />
             </div>
             <Timer hasGameStarted={moves > 0} isGameOver={isGameOver}/>
             <div className="game-board">
