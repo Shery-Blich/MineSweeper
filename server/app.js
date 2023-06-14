@@ -45,9 +45,7 @@ app.post('/linkedSquares/:index', (req, res) => {
     const mineFieldInstance = new mineFieldManager(mineFiledSize, mineField.bombs.length, mineField.mine, new Set(mineField.bombs));
     const allLinkedZeros = Array.from(mineFieldInstance.getAllLinkedSquares(index));
 
-    res.send({allLinked :allLinkedZeros, mineField:
-            {size: mineFieldInstance.size, mine: mineFieldInstance.mine, bombs: Array.from(mineFieldInstance.bombs)}})
-        .status(200).end();
+    res.send({allLinked :allLinkedZeros}).status(200).end();
 });
 
 app.listen(port, () => {
